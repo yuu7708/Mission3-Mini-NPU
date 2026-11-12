@@ -58,15 +58,17 @@ def valid_matrix(matrix, size):
     return True
 
 
+
 def mac_operation(pattern, filter_matrix):
-    """MAC: 곱셈 후 누적 합산"""
+    """MAC: 같은 위치의 값을 곱한 뒤 누적 합산"""
     total = 0.0
 
     for row in range(len(pattern)):
-        for col in range(len(pattern)):
+        for col in range(len(pattern[row])):
             total += pattern[row][col] * filter_matrix[row][col]
 
-    return total
+    return float(total)
+
 
 
 def judge(score_cross, score_x):
@@ -95,6 +97,28 @@ def normalize_label(label):
 
     return None
 
+def normalize_filter_keys(filter_set):
+    """필터 이름을 Cross와 X로 통일"""
+    if not isinstance(filter_set, dict):
+        return None
+
+    normalized = {}
+
+    for key, value in filter_set.items():
+        label = normalize_label(key)
+
+        if label is None:
+            continue
+
+        if label in normalized:
+            return None
+
+        normalized[label] = value
+
+    if "Cross" not in normalized or "X" not in normalized:
+        return None
+
+    return normalized
 
 def measure_time(pattern, filter_matrix):
     """MAC 연산 평균 시간(ms) 측정"""
@@ -240,6 +264,9 @@ def json_mode():
                 raise ValueError("패턴 이름 형식 오류")
 
             size = int(match.group(1))
+
+            if size not in (5, 13, 25):
+                raise ValueError(f"지원하지 않는 패턴 크기입니다: {size}x{size}")
             filter_key = f"size_{size}"
 
             if filter_key not in filters:
@@ -259,16 +286,13 @@ def json_mode():
                     f"패턴 배열 크기가 {size}x{size}와 일치하지 않습니다."
                 )
 
-            filter_set = filters[filter_key]
+            filter_set = normalize_filter_keys(filters[filter_key])
 
-            if not isinstance(filter_set, dict):
-                raise ValueError("필터 데이터 구조 오류")
+            if filter_set is None:
+                raise ValueError("Cross 또는 X 필터가 없거나 이름이 중복되었습니다.")
 
-            if "cross" not in filter_set or "x" not in filter_set:
-                raise ValueError("Cross 또는 X 필터가 없습니다.")
-
-            cross_filter = filter_set["cross"]
-            x_filter = filter_set["x"]
+            cross_filter = filter_set["Cross"]
+            x_filter = filter_set["X"]
 
             if not valid_matrix(cross_filter, size):
                 raise ValueError("Cross 필터 크기 또는 숫자 형식 오류")
