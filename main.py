@@ -208,7 +208,7 @@ def user_mode():
     print(f"B 평균 연산 시간: {time_b:.6f} ms")
 
     if result == "UNDECIDED":
-        print("UNDECIDED")
+        print("판정 불가")
     elif result == "Cross":
         print("A")
     else:
