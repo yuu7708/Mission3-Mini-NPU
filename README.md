@@ -319,3 +319,14 @@ MAC 연산의 시간 복잡도는 `O(N²)`입니다.
 - 병렬 연산 구조 적용
 
 이러한 개선 방향은 대규모 행렬 연산에서 연산 장치의 활용률을 높이고 병목을 줄이는 데 도움이 될 수 있습니다.
+
+## 실행 결과 스크린샷
+
+### 1. 사용자 입력 모드
+![사용자 입력 결과](screenshots/01-user-mode.png)
+
+### 2. JSON 데이터 분석 결과
+![JSON 분석 결과](screenshots/02-json-results.png)
+
+### 3. JSON 테스트 요약 및 성능 측정
+![테스트 요약 및 성능](screenshots/03-json-summary.png)
